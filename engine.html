@@ -124,8 +124,7 @@ const els = {
   mainFrame: document.getElementById("mainFrame"),
   bottomNav: document.getElementById("bottomNav"),
   statusText: document.getElementById("statusText"),
-  logoutBtn: document.getElementById("logoutBtn"),
-  navBtns: document.querySelectorAll(".nav-btn")
+  logoutBtn: document.getElementById("logoutBtn")
 };
 
 // cookies
@@ -133,7 +132,7 @@ function setCookie(n,v,d=365){const t=new Date();t.setTime(t.getTime()+d*24*60*6
 function getCookie(n){const m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)');return m?decodeURIComponent(m.pop()):null;}
 function eraseCookie(n){document.cookie=`${n}=;Max-Age=-99999999;path=/`;}
 
-// screen transitions
+// transitions
 function showScreen(targetId){
   Object.values(screens).forEach(s=>{
     if(s.id===targetId){ s.classList.add("active"); s.classList.remove("left"); }
@@ -152,9 +151,9 @@ const pages = {
 };
 
 function loadPage(key){
-  const code=getCookie("snout_usercode");
+  const code = getCookie("snout_usercode");
   if(!code) return;
-  els.mainFrame.src=pages[key].replace(/USERCODE/g,encodeURIComponent(code));
+  els.mainFrame.src = pages[key].replace(/USERCODE/g, encodeURIComponent(code));
 }
 
 async function fetchAccounts(){
@@ -187,6 +186,16 @@ function startApp(user, code){
   showScreen("screenMain");
   els.bottomNav.style.display="flex";
   els.statusText.textContent="Signed in as "+user;
+
+  // attach bottom nav after showing
+  const navButtons = Array.from(document.querySelectorAll(".nav-btn"));
+  navButtons.forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const target = btn.dataset.target;
+      loadPage(target);
+    });
+  });
+
   loadPage("home");
 }
 
@@ -201,15 +210,13 @@ function autoLogin(){
 els.btnStart.onclick = ()=>showScreen("screenLoginChoice");
 els.btnGoSignIn.onclick = ()=>showScreen("screenSignIn");
 els.btnGoNewUser.onclick = ()=>showScreen("screenNewUser");
-els.backToChoice1.onclick = ()=>showScreen("screenLoginChoice");
-els.backToChoice2.onclick = ()=>showScreen("screenLoginChoice");
+document.getElementById("backToChoice1").onclick = ()=>showScreen("screenLoginChoice");
+document.getElementById("backToChoice2").onclick = ()=>showScreen("screenLoginChoice");
 els.btnLogin.onclick = ()=>attemptLogin(els.username.value.trim(), els.password.value.trim());
-els.logoutBtn.onclick = ()=>{ eraseCookie("snout_username"); eraseCookie("snout_password"); eraseCookie("snout_usercode"); location.reload(); };
-
-// bottom nav
-els.navBtns.forEach(btn => {
-  btn.onclick = ()=>loadPage(btn.dataset.target);
-});
+els.logoutBtn.onclick = ()=>{
+  eraseCookie("snout_username"); eraseCookie("snout_password"); eraseCookie("snout_usercode");
+  location.reload();
+};
 
 autoLogin();
 
