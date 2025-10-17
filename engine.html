@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SnoutTag App</title>
+<style>
+:root {
+  --stratus-blue: #578ff6;
+  --bg: #f7f9fc;
+  --muted: #6b7280;
+  --nav-height: 70px;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+body, html { margin:0; padding:0; height:100%; background:var(--bg); overflow:hidden; }
+.app { height:100vh; max-width:600px; margin:0 auto; position:relative; overflow:hidden; }
+.screen { position:absolute; top:0; left:100%; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:24px; text-align:center; transition:left 0.3s ease-in-out; }
+.screen.active { left:0; }
+.screen.left { left:-100%; }
+.logo { width:80px; height:80px; border-radius:20px; background:var(--stratus-blue); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:28px; margin-bottom:20px; box-shadow:0 6px 20px rgba(87,143,246,0.25); }
+h1 { margin:0 0 12px; font-size:20px; }
+p { color:var(--muted); margin:0 0 24px; font-size:15px; }
+.btn { border:none; border-radius:12px; padding:12px 18px; font-size:16px; cursor:pointer; font-weight:600; width:100%; max-width:280px; }
+.btn-primary { background:var(--stratus-blue); color:white; }
+.btn-outline { border:2px solid var(--stratus-blue); background:transparent; color:var(--stratus-blue); }
+.form { width:100%; max-width:320px; display:flex; flex-direction:column; gap:12px; }
+input { padding:10px 12px; border-radius:10px; border:1px solid #e5e7eb; font-size:15px; }
+label { text-align:left; font-size:13px; color:var(--muted); }
+.note { color:var(--muted); font-size:13px; text-align:center; margin-top:10px; }
+a { color:var(--stratus-blue); text-decoration:none; }
+.content { flex:1; position:relative; overflow:hidden; width:100%; height:100%; }
+iframe { width:100%; height:100%; border:none; display:block; }
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-height); background:var(--stratus-blue); display:flex; justify-content:space-around; align-items:center; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow:0 -4px 10px rgba(0,0,0,0.1); }
+.nav-btn { background:transparent; border:none; width:50px; height:50px; display:flex; align-items:center; justify-content:center; border-radius:12px; }
+.nav-btn img { width:28px; height:28px; }
+.top-bar { position:absolute; top:20px; left:20px; }
+.back-btn { background:none; border:none; color:var(--stratus-blue); font-size:16px; font-weight:600; cursor:pointer; }
+.logout { background:none; border:1px solid #e5e7eb; border-radius:10px; padding:8px 10px; cursor:pointer; font-size:13px; position:absolute; top:20px; right:20px; }
+.status { font-size:13px; color:var(--muted); margin-bottom:10px; padding:10px; text-align:center; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- WELCOME SCREEN -->
+<div id="screenWelcome" class="screen active">
+  <div class="logo">S</div>
+  <h1>Welcome to the SnoutTag app.</h1>
+  <p>Your simple companion for Snout services.</p>
+  <button class="btn btn-primary" id="btnStart">Continue</button>
+</div>
+
+<!-- LOGIN CHOICE -->
+<div id="screenLoginChoice" class="screen">
+  <div class="logo">S</div>
+  <h1>Get started</h1>
+  <p>Access your Snout account or set up a new one.</p>
+  <button class="btn btn-primary" id="btnGoSignIn">Sign in</button>
+  <button class="btn btn-outline" id="btnGoNewUser">New user?</button>
+</div>
+
+<!-- SIGN IN -->
+<div id="screenSignIn" class="screen">
+  <div class="top-bar"><button class="back-btn" id="backToChoice1">Back</button></div>
+  <div class="logo">S</div>
+  <h1>Sign in</h1>
+  <div class="form">
+    <label>Username</label>
+    <input type="text" id="username">
+    <label>Password</label>
+    <input type="password" id="password">
+    <button class="btn btn-primary" id="btnLogin">Log in</button>
+  </div>
+  <div class="note" id="loginMsg"></div>
+</div>
+
+<!-- NEW USER -->
+<div id="screenNewUser" class="screen">
+  <div class="top-bar"><button class="back-btn" id="backToChoice2">Back</button></div>
+  <div class="logo">S</div>
+  <h1>New user setup</h1>
+  <p>You should have received a phone call from our team to help set up your account.</p>
+  <p>If not or you prefer email, contact <a href="mailto:enrollment@snoutpet.co.uk">enrollment@snoutpet.co.uk</a>.</p>
+</div>
+
+<!-- MAIN APP -->
+<div id="screenMain" class="screen">
+  <div class="status" id="statusText">Signed in</div>
+  <button id="logoutBtn" class="logout">Logout</button>
+  <div class="content"><iframe id="mainFrame"></iframe></div>
+</div>
+
+<div id="bottomNav" class="bottom-nav" style="display:none;">
+  <button class="nav-btn" data-target="home"><img src="https://img.icons8.com/ios-filled/50/ffffff/home.png"/></button>
+  <button class="nav-btn" data-target="tags"><img src="https://img.icons8.com/ios-filled/50/ffffff/tag-window.png"/></button>
+  <button class="nav-btn" data-target="setup"><img src="https://img.icons8.com/ios-filled/50/ffffff/settings.png"/></button>
+  <button class="nav-btn" data-target="profile"><img src="https://img.icons8.com/ios-filled/50/ffffff/user.png"/></button>
+  <button class="nav-btn" data-target="menu"><img src="https://img.icons8.com/ios-filled/50/ffffff/menu.png"/></button>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+const SERVER_URL = "https://<username>.github.io/<repo>/accounts.json"; // replace with your GitHub Pages JSON URL
+
+const screens = {
+  welcome: document.getElementById("screenWelcome"),
+  loginChoice: document.getElementById("screenLoginChoice"),
+  signIn: document.getElementById("screenSignIn"),
+  newUser: document.getElementById("screenNewUser"),
+  main: document.getElementById("screenMain")
+};
+
+const els = {
+  btnStart: document.getElementById("btnStart"),
+  btnGoSignIn: document.getElementById("btnGoSignIn"),
+  btnGoNewUser: document.getElementById("btnGoNewUser"),
+  backToChoice1: document.getElementById("backToChoice1"),
+  backToChoice2: document.getElementById("backToChoice2"),
+  btnLogin: document.getElementById("btnLogin"),
+  username: document.getElementById("username"),
+  password: document.getElementById("password"),
+  loginMsg: document.getElementById("loginMsg"),
+  mainFrame: document.getElementById("mainFrame"),
+  bottomNav: document.getElementById("bottomNav"),
+  statusText: document.getElementById("statusText"),
+  logoutBtn: document.getElementById("logoutBtn"),
+  navBtns: document.querySelectorAll(".nav-btn")
+};
+
+// cookies
+function setCookie(n,v,d=365){const t=new Date();t.setTime(t.getTime()+d*24*60*60*1e3);document.cookie=`${n}=${encodeURIComponent(v)};path=/;expires=${t.toUTCString()};SameSite=Lax`;}
+function getCookie(n){const m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)');return m?decodeURIComponent(m.pop()):null;}
+function eraseCookie(n){document.cookie=`${n}=;Max-Age=-99999999;path=/`;}
+
+// screen transitions
+function showScreen(targetId){
+  Object.values(screens).forEach(s=>{
+    if(s.id===targetId){ s.classList.add("active"); s.classList.remove("left"); }
+    else if(s.classList.contains("active")){ s.classList.remove("active"); s.classList.add("left"); }
+    else { s.classList.remove("active","left"); }
+  });
+}
+
+// page URLs
+const pages = {
+  home:"https://app.snoutpet.co.uk/USERCODE/home",
+  tags:"https://app.snoutpet.co.uk/USERCODE/tags",
+  setup:"https://app.snoutpet.co.uk/USERCODE/setup",
+  profile:"https://app.snoutpet.co.uk/USERCODE/profile",
+  menu:"https://app.snoutpet.co.uk/USERCODE/menu"
+};
+
+function loadPage(key){
+  const code=getCookie("snout_usercode");
+  if(!code) return;
+  els.mainFrame.src=pages[key].replace(/USERCODE/g,encodeURIComponent(code));
+}
+
+async function fetchAccounts(){
+  try {
+    const res = await fetch(SERVER_URL, {cache:"no-store"});
+    if(!res.ok) throw new Error("Network error: "+res.status);
+    return await res.json();
+  } catch(e){
+    console.error(e);
+    throw new Error("Unable to reach the server.");
+  }
+}
+
+async function attemptLogin(u,p){
+  els.loginMsg.textContent="Contacting server...";
+  let users;
+  try{ users = await fetchAccounts(); }
+  catch(e){ els.loginMsg.textContent="Unable to reach the server."; return; }
+  
+  const found = users.find(x=>x.username===u && x.password===p);
+  if(!found){ els.loginMsg.textContent="Invalid username or password."; return; }
+  
+  setCookie("snout_username", u);
+  setCookie("snout_password", p);
+  setCookie("snout_usercode", found.usercode);
+  startApp(u, found.usercode);
+}
+
+function startApp(user, code){
+  showScreen("screenMain");
+  els.bottomNav.style.display="flex";
+  els.statusText.textContent="Signed in as "+user;
+  loadPage("home");
+}
+
+function autoLogin(){
+  const u=getCookie("snout_username"), p=getCookie("snout_password"), c=getCookie("snout_usercode");
+  if(u && p && c){
+    attemptLogin(u,p);
+  }
+}
+
+// events
+els.btnStart.onclick = ()=>showScreen("screenLoginChoice");
+els.btnGoSignIn.onclick = ()=>showScreen("screenSignIn");
+els.btnGoNewUser.onclick = ()=>showScreen("screenNewUser");
+els.backToChoice1.onclick = ()=>showScreen("screenLoginChoice");
+els.backToChoice2.onclick = ()=>showScreen("screenLoginChoice");
+els.btnLogin.onclick = ()=>attemptLogin(els.username.value.trim(), els.password.value.trim());
+els.logoutBtn.onclick = ()=>{ eraseCookie("snout_username"); eraseCookie("snout_password"); eraseCookie("snout_usercode"); location.reload(); };
+els.navBtns.forEach(b=>b.onclick=()=>loadPage(b.dataset.target));
+
+autoLogin();
+
+});
+</script>
+</body>
+</html>
