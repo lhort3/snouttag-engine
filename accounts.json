@@ -1,4 +1,4 @@
- [
-      { "username": "chorton", "password": "VWCHOPY63", "usercode": "chor" },
-      { "username": "bob", "password": "hunter2", "usercode": "XYZ789" }
-    ]
+[
+  { "username": "chorton", "password": "test", "usercode": "chor" },
+  { "username": "bob", "password": "qwerty", "usercode": "XYZ002" }
+]
