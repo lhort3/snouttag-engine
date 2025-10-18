@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Milly's Tag</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #333;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    label {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: left;
+    }
+    input, select, textarea {
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      background-color: #5790f6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #4a7ddc;
+    }
+    .profile-pic {
+      display: block;
+      margin: 0 auto 20px auto;
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+    }
+    .status {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #444;
+    }
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #ccc;
+      border-top: 3px solid #5790f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      vertical-align: middle;
+      margin-left: 10px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Edit Milly's Tag</h2>
+    <img src="https://iili.io/2pi2414.png" alt="Milly" class="profile-pic">
+    <form id="editForm">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" value="Milly">
+
+      <label for="gender">Gender</label>
+      <select id="gender" name="gender">
+        <option>Female</option>
+        <option>Male</option>
+        <option selected>Female Spayed</option>
+        <option>Male Neutered</option>
+      </select>
+
+      <label for="allergies">Allergies</label>
+      <input type="text" id="allergies" name="allergies" value="None">
+
+      <label for="notes">Notes</label>
+      <textarea id="notes" name="notes">I'm friendly</textarea>
+
+      <label for="medical">Medical Conditions</label>
+      <textarea id="medical" name="medical">None</textarea>
+
+      <label for="tracker">Tracker</label>
+      <input type="text" id="tracker" name="tracker" value="Find My Tracker">
+
+      <button type="button" onclick="sendToDiscord()">Save</button>
+    </form>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    async function sendToDiscord() {
+      const statusEl = document.getElementById('status');
+      statusEl.innerHTML = 'Waiting for server to become available <span class="spinner"></span>';
+
+      const data = {
+        content: "Edit Tag Submission",
+        embeds: [{
+          title: document.getElementById('name').value,
+          fields: [
+            { name: 'Gender', value: document.getElementById('gender').value, inline: true },
+            { name: 'Allergies', value: document.getElementById('allergies').value, inline: true },
+            { name: 'Notes', value: document.getElementById('notes').value, inline: false },
+            { name: 'Medical Conditions', value: document.getElementById('medical').value, inline: false },
+            { name: 'Tracker', value: document.getElementById('tracker').value, inline: true }
+          ]
+        }]
+      };
+
+      try {
+        await fetch('https://discord.com/api/webhooks/1420091496123728024/LzxrjRK-epTUx1MFztz5mKEkG6Izjv700tjZ3XPRPOgZkWlT8PQdv3vIWpqbZ2msXBg7', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        statusEl.textContent = 'Accepted, please wait 48 hours';
+      } catch (err) {
+        statusEl.textContent = 'Accepted, please wait 48 hours';
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
