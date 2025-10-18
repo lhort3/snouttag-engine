@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Licenses</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --stratus-blue: #4da7f8;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+    }
+    .sidebar {
+      background-color: #5790f6;
+      width: 250px;
+      height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .sidebar img.logo {
+      width: 150px;
+      margin-bottom: 40px;
+    }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+    .icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+    .main {
+      padding: 40px;
+      margin-left: 250px;
+      flex-grow: 1;
+    }
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      z-index: 1001;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hamburger div {
+      background-color: var(--stratus-blue);
+      height: 4px;
+      border-radius: 2px;
+    }
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      .main {
+        margin-left: 0;
+        padding-top: 80px;
+      }
+    }
+    .license-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .license-item {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      justify-content: space-between;
+    }
+    .license-item img {
+      width: 50px;
+      height: 50px;
+      margin-right: 20px;
+      border-radius: 5px;
+    }
+    .license-details {
+      flex-grow: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .license-details span {
+      color: #333;
+      font-weight: bold;
+    }
+    .edit-link {
+      margin-left: auto;
+      font-weight: bold;
+    }
+    .edit-link a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    .edit-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="main" id="mainContent" onclick="closeSidebarIfOpen(event)">
+    <h3>/ Tags / Chris Horton</h3>
+    <div class="license-container">
+      <div class="license-item">
+        <img src="https://iili.io/2pi2414.png" alt="Milly Icon">
+        <div class="license-details">
+          <span>Serial Number: 321L93 <br> License Number: 39280283</span>
+          <span class="edit-link"><a href="https://app.snoutpet.co.uk/chor/update-milly.html">Edit</a></span>
+        </div>
+      </div>
+      <div class="license-item">
+        <img src="https://iili.io/2piJWTg.png" alt="Chop Icon">
+        <div class="license-details">
+          <span>Serial Number: 482B39 <br> License Number: 49238013</span>
+          <span class="edit-link"><a href="https://app.snoutpet.co.uk/chor/update-chop.html">Edit</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function toggleSidebar(event) {
+      event.stopPropagation();
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+    }
+    function closeSidebarIfOpen(event) {
+      const sidebar = document.getElementById('sidebar');
+      if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
+    }
+    document.getElementById('sidebar').addEventListener('click', function (event) {
+      event.stopPropagation();
+    });
+  </script>
+</body>
+</html>
