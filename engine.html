@@ -12,28 +12,110 @@
   --nav-height: 70px;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
 }
-body, html { margin:0; padding:0; height:100%; background:var(--bg); overflow:hidden; }
-.app { height:100vh; max-width:600px; margin:0 auto; position:relative; overflow:hidden; display:flex; flex-direction:column; }
-.screen { position:absolute; top:0; left:100%; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:24px; text-align:center; transition:left 0.3s ease-in-out; }
+body, html {
+  margin:0;
+  padding:0;
+  height:100%;
+  background:var(--bg);
+  overflow:hidden;
+}
+.app {
+  height:100vh;
+  max-width:600px;
+  margin:0 auto;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.screen {
+  position:absolute;
+  top:0;
+  left:100%;
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  transition:left 0.3s ease-in-out;
+  padding:24px;
+  box-sizing:border-box;
+}
 .screen.active { left:0; }
 .screen.left { left:-100%; }
-.logo { width:80px; height:80px; border-radius:20px; background:var(--stratus-blue); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:28px; margin-bottom:20px; box-shadow:0 6px 20px rgba(87,143,246,0.25); }
+
+.logo {
+  width:100px;
+  height:100px;
+  border-radius:20px;
+  overflow:hidden;
+  margin-bottom:24px;
+  box-shadow:0 6px 20px rgba(87,143,246,0.25);
+}
+.logo img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
 h1 { margin:0 0 12px; font-size:20px; }
 p { color:var(--muted); margin:0 0 24px; font-size:15px; }
-.btn { border:none; border-radius:12px; padding:12px 18px; font-size:16px; cursor:pointer; font-weight:600; width:100%; max-width:280px; }
+
+.btn {
+  border:none;
+  border-radius:12px;
+  padding:12px 18px;
+  font-size:16px;
+  cursor:pointer;
+  font-weight:600;
+  width:100%;
+  max-width:280px;
+}
 .btn-primary { background:var(--stratus-blue); color:white; }
 .btn-outline { border:2px solid var(--stratus-blue); background:transparent; color:var(--stratus-blue); }
+
+.spacer { height:12px; } /* gap between buttons */
+
 .form { width:100%; max-width:320px; display:flex; flex-direction:column; gap:12px; }
 input { padding:10px 12px; border-radius:10px; border:1px solid #e5e7eb; font-size:15px; }
 label { text-align:left; font-size:13px; color:var(--muted); }
 .note { color:var(--muted); font-size:13px; text-align:center; margin-top:10px; }
 a { color:var(--stratus-blue); text-decoration:none; }
+
 .content { flex:1; width:100%; position:relative; overflow:hidden; display:flex; flex-direction:column; }
 iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; display:block; }
-.bottom-nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-height); background:var(--stratus-blue); display:flex; justify-content:space-around; align-items:center; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow:0 -4px 10px rgba(0,0,0,0.1); }
-.nav-btn { background:transparent; border:none; width:50px; height:50px; display:flex; align-items:center; justify-content:center; border-radius:12px; opacity:0.7; transition:opacity 0.2s; }
+
+.bottom-nav {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:var(--nav-height);
+  background:var(--stratus-blue);
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  border-top-left-radius:20px;
+  border-top-right-radius:20px;
+  box-shadow:0 -4px 10px rgba(0,0,0,0.1);
+}
+.nav-btn {
+  background:transparent;
+  border:none;
+  width:50px;
+  height:50px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  opacity:0.7;
+  transition:opacity 0.2s;
+}
 .nav-btn.active { opacity:1; }
 .nav-btn img { width:28px; height:28px; }
+
 .top-bar { position:absolute; top:20px; left:20px; }
 .back-btn { background:none; border:none; color:var(--stratus-blue); font-size:16px; font-weight:600; cursor:pointer; }
 </style>
@@ -43,7 +125,7 @@ iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none;
 
 <!-- WELCOME -->
 <div id="screenWelcome" class="screen active">
-  <div class="logo">S</div>
+  <div class="logo"><img src="logo.png" alt="SnoutTag Logo"></div>
   <h1>Welcome to the SnoutTag app.</h1>
   <p>Your simple companion for Snout services.</p>
   <button class="btn btn-primary" id="btnStart">Continue</button>
@@ -51,17 +133,18 @@ iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none;
 
 <!-- LOGIN CHOICE -->
 <div id="screenLoginChoice" class="screen">
-  <div class="logo">S</div>
+  <div class="logo"><img src="logo.png" alt="SnoutTag Logo"></div>
   <h1>Get started</h1>
   <p>Access your Snout account or set up a new one.</p>
   <button class="btn btn-primary" id="btnGoSignIn">Sign in</button>
+  <div class="spacer"></div>
   <button class="btn btn-outline" id="btnGoNewUser">New user?</button>
 </div>
 
 <!-- SIGN IN -->
 <div id="screenSignIn" class="screen">
   <div class="top-bar"><button class="back-btn" id="backToChoice1">Back</button></div>
-  <div class="logo">S</div>
+  <div class="logo"><img src="logo.png" alt="SnoutTag Logo"></div>
   <h1>Sign in</h1>
   <div class="form">
     <label>Username</label>
@@ -76,7 +159,7 @@ iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none;
 <!-- NEW USER -->
 <div id="screenNewUser" class="screen">
   <div class="top-bar"><button class="back-btn" id="backToChoice2">Back</button></div>
-  <div class="logo">S</div>
+  <div class="logo"><img src="logo.png" alt="SnoutTag Logo"></div>
   <h1>New user setup</h1>
   <p>You should have received a phone call from our team to help set up your account.</p>
   <p>If not or you prefer email, contact <a href="mailto:enrollment@snoutpet.co.uk">enrollment@snoutpet.co.uk</a>.</p>
@@ -87,6 +170,7 @@ iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none;
   <div class="content"><iframe id="mainFrame"></iframe></div>
 </div>
 
+<!-- NAV -->
 <div id="bottomNav" class="bottom-nav" style="display:none;">
   <button class="nav-btn" data-target="home"><img src="https://img.icons8.com/ios-filled/50/ffffff/home.png"/></button>
   <button class="nav-btn" data-target="tags"><img src="https://img.icons8.com/ios-filled/50/ffffff/tag-window.png"/></button>
@@ -98,7 +182,7 @@ iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none;
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
-const SERVER_URL = "https://lhort3.github.io/snouttag-engine/accounts.json";
+const SERVER_URL = "http://app.snoutpet.co.uk/accounts.json";
 
 const screens = {
   welcome: document.getElementById("screenWelcome"),
@@ -122,7 +206,7 @@ const els = {
   bottomNav: document.getElementById("bottomNav")
 };
 
-// cookie utils
+// cookie helpers
 function setCookie(n,v,d=365){const t=new Date();t.setTime(t.getTime()+d*24*60*60*1e3);document.cookie=`${n}=${encodeURIComponent(v)};path=/;expires=${t.toUTCString()};SameSite=Lax`;}
 function getCookie(n){const m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)');return m?decodeURIComponent(m.pop()):null;}
 function eraseCookie(n){document.cookie=`${n}=;Max-Age=-99999999;path=/`;}
@@ -136,7 +220,7 @@ function showScreen(targetId){
   });
 }
 
-// pages
+// page URLs
 const pages = {
   home:"https://app.snoutpet.co.uk/USERCODE/home",
   tags:"https://app.snoutpet.co.uk/USERCODE/tags",
