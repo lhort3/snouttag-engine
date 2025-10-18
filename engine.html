@@ -29,20 +29,19 @@ label { text-align:left; font-size:13px; color:var(--muted); }
 .note { color:var(--muted); font-size:13px; text-align:center; margin-top:10px; }
 a { color:var(--stratus-blue); text-decoration:none; }
 .content { flex:1; width:100%; position:relative; overflow:hidden; display:flex; flex-direction:column; }
-iframe { width:100%; height:100%; border:none; display:block; }
+iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; display:block; }
 .bottom-nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-height); background:var(--stratus-blue); display:flex; justify-content:space-around; align-items:center; border-top-left-radius:20px; border-top-right-radius:20px; box-shadow:0 -4px 10px rgba(0,0,0,0.1); }
-.nav-btn { background:transparent; border:none; width:50px; height:50px; display:flex; align-items:center; justify-content:center; border-radius:12px; }
+.nav-btn { background:transparent; border:none; width:50px; height:50px; display:flex; align-items:center; justify-content:center; border-radius:12px; opacity:0.7; transition:opacity 0.2s; }
+.nav-btn.active { opacity:1; }
 .nav-btn img { width:28px; height:28px; }
 .top-bar { position:absolute; top:20px; left:20px; }
 .back-btn { background:none; border:none; color:var(--stratus-blue); font-size:16px; font-weight:600; cursor:pointer; }
-.logout { background:none; border:1px solid #e5e7eb; border-radius:10px; padding:8px 10px; cursor:pointer; font-size:13px; position:absolute; top:20px; right:20px; }
-.status { font-size:13px; color:var(--muted); margin-bottom:10px; padding:10px; text-align:center; }
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- WELCOME SCREEN -->
+<!-- WELCOME -->
 <div id="screenWelcome" class="screen active">
   <div class="logo">S</div>
   <h1>Welcome to the SnoutTag app.</h1>
@@ -85,8 +84,6 @@ iframe { width:100%; height:100%; border:none; display:block; }
 
 <!-- MAIN APP -->
 <div id="screenMain" class="screen">
-  <div class="status" id="statusText">Signed in</div>
-  <button id="logoutBtn" class="logout">Logout</button>
   <div class="content"><iframe id="mainFrame"></iframe></div>
 </div>
 
@@ -101,7 +98,7 @@ iframe { width:100%; height:100%; border:none; display:block; }
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
-const SERVER_URL = "https://lhort3.github.io/snouttag-engine/accounts.json"; // replace with your GitHub Pages JSON URL
+const SERVER_URL = "https://lhort3.github.io/snouttag-engine/accounts.json";
 
 const screens = {
   welcome: document.getElementById("screenWelcome"),
@@ -122,12 +119,10 @@ const els = {
   password: document.getElementById("password"),
   loginMsg: document.getElementById("loginMsg"),
   mainFrame: document.getElementById("mainFrame"),
-  bottomNav: document.getElementById("bottomNav"),
-  statusText: document.getElementById("statusText"),
-  logoutBtn: document.getElementById("logoutBtn")
+  bottomNav: document.getElementById("bottomNav")
 };
 
-// cookies
+// cookie utils
 function setCookie(n,v,d=365){const t=new Date();t.setTime(t.getTime()+d*24*60*60*1e3);document.cookie=`${n}=${encodeURIComponent(v)};path=/;expires=${t.toUTCString()};SameSite=Lax`;}
 function getCookie(n){const m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)');return m?decodeURIComponent(m.pop()):null;}
 function eraseCookie(n){document.cookie=`${n}=;Max-Age=-99999999;path=/`;}
@@ -141,7 +136,7 @@ function showScreen(targetId){
   });
 }
 
-// page URLs
+// pages
 const pages = {
   home:"https://app.snoutpet.co.uk/USERCODE/home",
   tags:"https://app.snoutpet.co.uk/USERCODE/tags",
@@ -179,23 +174,23 @@ async function attemptLogin(u,p){
   setCookie("snout_username", u);
   setCookie("snout_password", p);
   setCookie("snout_usercode", found.usercode);
-  startApp(u, found.usercode);
+  startApp(found.usercode);
 }
 
-function startApp(user, code){
+function startApp(code){
   showScreen("screenMain");
   els.bottomNav.style.display="flex";
-  els.statusText.textContent="Signed in as "+user;
 
-  // attach bottom nav after showing
-  const navButtons = Array.from(document.querySelectorAll(".nav-btn"));
+  const navButtons = document.querySelectorAll("#bottomNav .nav-btn");
   navButtons.forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const target = btn.dataset.target;
-      loadPage(target);
-    });
+    btn.onclick = ()=>{
+      navButtons.forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      loadPage(btn.dataset.target);
+    };
   });
 
+  navButtons[0].classList.add("active");
   loadPage("home");
 }
 
@@ -206,17 +201,13 @@ function autoLogin(){
   }
 }
 
-// events
+// event listeners
 els.btnStart.onclick = ()=>showScreen("screenLoginChoice");
 els.btnGoSignIn.onclick = ()=>showScreen("screenSignIn");
 els.btnGoNewUser.onclick = ()=>showScreen("screenNewUser");
-document.getElementById("backToChoice1").onclick = ()=>showScreen("screenLoginChoice");
-document.getElementById("backToChoice2").onclick = ()=>showScreen("screenLoginChoice");
+els.backToChoice1.onclick = ()=>showScreen("screenLoginChoice");
+els.backToChoice2.onclick = ()=>showScreen("screenLoginChoice");
 els.btnLogin.onclick = ()=>attemptLogin(els.username.value.trim(), els.password.value.trim());
-els.logoutBtn.onclick = ()=>{
-  eraseCookie("snout_username"); eraseCookie("snout_password"); eraseCookie("snout_usercode");
-  location.reload();
-};
 
 autoLogin();
 
