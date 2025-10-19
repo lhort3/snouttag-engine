@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Licenses</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --stratus-blue: #4da7f8;
+      --sidebar-blue: #5790f6;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      overflow-x: hidden;
+    }
+    .sidebar {
+      background-color: var(--sidebar-blue);
+      width: 250px;
+      height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .sidebar img.logo {
+      width: 150px;
+      margin-bottom: 40px;
+    }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+    .icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+    .main {
+      padding: 40px;
+      margin-left: 250px;
+      flex-grow: 1;
+    }
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      z-index: 1100;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hamburger div {
+      background-color: var(--stratus-blue);
+      height: 4px;
+      border-radius: 2px;
+    }
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      .main {
+        margin-left: 0;
+        padding-top: 80px;
+      }
+    }
+    /* Menu Section */
+    .menu-container {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .menu-item {
+      display: flex;
+      align-items: flex-start;
+      background: #fff;
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+    .menu-item:hover {
+      transform: translateY(-3px);
+    }
+    .menu-item img {
+      width: 40px;
+      height: 40px;
+      margin-right: 15px;
+    }
+    .menu-content {
+      display: flex;
+      flex-direction: column;
+    }
+    .menu-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--sidebar-blue);
+    }
+    .menu-description {
+      font-size: 14px;
+      color: #555;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="main" id="mainContent" onclick="closeSidebarIfOpen(event)">
+    <h3>/ Menu</h3>
+    <div class="menu-container">
+      <!-- Easy to add more menu items -->
+      <a href="https://support.snoutpet.co.uk" class="menu-item">
+        <img src="https://img.icons8.com/ios-filled/100/578ff6/phone.png" alt="Assistant Icon">
+        <div class="menu-content">
+          <div class="menu-title">Customer Services</div>
+          <div class="menu-description">Here to help with anything</div>
+        </div>
+         </a>
+     <!-- Easy to add more menu items -->
+      <a href="https://app.snoutpet.co.uk/rfry/subscription" class="menu-item">
+        <img src="https://img.icons8.com/ios-glyphs/90/578ff6/card-in-use.png" alt="Card Icon">
+        <div class="menu-content">
+          <div class="menu-title">Your Subscription</div>
+          <div class="menu-description">Change, pay or cancel your subscription</div>
+        </div>
+      </a>
+           <!-- Easy to add more menu items -->
+      <a href="https://app.snoutpet.co.uk/logout.html" class="menu-item">
+        <img src="https://img.icons8.com/ios-filled/100/578ff6/logout-rounded.png" alt="Card Icon">
+        <div class="menu-content">
+          <div class="menu-title">Log Out</div>
+          <div class="menu-description">Log out of the SnoutTag app</div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <script>
+    function toggleSidebar(event) {
+      event.stopPropagation();
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+    }
+    function closeSidebarIfOpen(event) {
+      const sidebar = document.getElementById('sidebar');
+      if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
+    }
+    document.getElementById('sidebar').addEventListener('click', function (event) {
+      event.stopPropagation();
+    });
+    document.getElementById('hamburger').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        toggleSidebar(e);
+      }
+    });
+  </script>
+</body>
+</html>
