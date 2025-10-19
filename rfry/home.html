@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stratus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --stratus-blue: #4da7f8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+    }
+
+    .sidebar {
+      background-color: #5790f6;
+      width: 250px;
+      height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .sidebar img.logo {
+      width: 150px;
+      margin-bottom: 40px;
+    }
+
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+      font-weight: normal;
+    }
+
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+
+    .main {
+      padding: 40px;
+      margin-left: 250px;
+      flex-grow: 1;
+      font-weight: normal;
+      transition: margin-left 0.3s ease;
+    }
+
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      z-index: 1001;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hamburger div {
+      background-color: var(--stratus-blue);
+      height: 4px;
+      border-radius: 2px;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .main {
+        margin-left: 0;
+        padding-top: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div class="main" id="mainContent" onclick="closeSidebarIfOpen(event)">
+    <div>/ Home</div>
+    <h2>Welcome, <span style="color: #4a90e2;">Richard Fry</span></h2>
+    <p>For tag onboarding, please follow instructions here: <a href="https://stratus.snoutpet.co.uk/onboarding" target="_blank">Tag Onboarding</a>.</p>
+  </div>
+
+  <script>
+    function toggleSidebar(event) {
+      event.stopPropagation();
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+    }
+
+    function closeSidebarIfOpen(event) {
+      const sidebar = document.getElementById('sidebar');
+      if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
+    }
+
+    document.getElementById('sidebar').addEventListener('click', function (event) {
+      event.stopPropagation();
+    });
+  </script>
+
+</body>
+</html>
