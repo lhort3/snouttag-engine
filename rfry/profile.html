@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --stratus-blue: #4da7f8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+    }
+    .sidebar {
+      background-color: #5790f6;
+      width: 250px;
+      height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .sidebar img.logo {
+      width: 150px;
+      margin-bottom: 40px;
+    }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover { text-decoration: underline; }
+    .icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+    .main {
+      padding: 40px;
+      margin-left: 250px;
+      flex-grow: 1;
+    }
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      z-index: 1001;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hamburger div {
+      background-color: var(--stratus-blue);
+      height: 4px;
+      border-radius: 2px;
+    }
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.active { transform: translateX(0); }
+      .main { margin-left: 0; padding-top: 80px; }
+    }
+    .profile-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .profile-item {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding: 20px 0;
+    }
+    .profile-item:last-child { border-bottom: none; }
+    .profile-icon {
+      color: var(--stratus-blue);
+      font-size: 24px;
+      margin-right: 20px;
+    }
+    .profile-label {
+      font-weight: bold;
+      color: var(--stratus-blue);
+    }
+    .profile-value { color: #333; }
+    .profile-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .update-link {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      font-size: 16px;
+    }
+    .update-link a {
+      color: var(--stratus-blue);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+    <div class="main" id="mainContent" onclick="closeSidebarIfOpen(event)">
+    <div class="profile-container">
+      <div class="profile-item"><div class="profile-icon">👤</div><div class="profile-text"><span class="profile-label">Name</span><span class="profile-value">Richard Fry</span></div></div>
+      <div class="profile-item"><div class="profile-icon">🔑</div><div class="profile-text"><span class="profile-label">Password</span><span class="profile-value">******</span></div></div>
+      <div class="profile-item"><div class="profile-icon">📧</div><div class="profile-text"><span class="profile-label">Email</span><span class="profile-value">rfry@snoutpet.co.uk</span></div></div>
+      <div class="profile-item"><div class="profile-icon">❌</div><div class="profile-text"><span class="profile-label">Email Verification Status</span><span class="profile-value">Unverified</span></div></div>
+      <div class="profile-item"><div class="profile-icon">🏠</div><div class="profile-text"><span class="profile-label">Address</span><span class="profile-value">31 Belgrave Close, Coalville, England, LE67 4TN</span></div></div>
+      <div class="profile-item"><div class="profile-icon">📞</div><div class="profile-text"><span class="profile-label">Phone Number</span><span class="profile-value">+44 7305566281‬</span></div></div>
+      <div class="profile-item"><div class="profile-icon">📦</div><div class="profile-text"><span class="profile-label">Additional Address</span><span class="profile-value">None</span></div></div>
+      <div class="update-link">
+        <a href="https://support.snoutpet.co.uk" target="_blank">Any details not correct? Click here.</a>
+        <hr><hr><hr><hr><hr>
+      </div>
+    </div>
+  </div>
+  <script>
+    function toggleSidebar(event) {
+      event.stopPropagation();
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+    }
+    function closeSidebarIfOpen(event) {
+      const sidebar = document.getElementById('sidebar');
+      if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
+    }
+    document.getElementById('sidebar').addEventListener('click', function (event) {
+      event.stopPropagation();
+    });
+  </script>
+</body>
+</html>
