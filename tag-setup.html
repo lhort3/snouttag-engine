@@ -145,6 +145,9 @@ textarea {
     </div>
     <h1>Tag Setup</h1>
     <form id="tagForm">
+      <label>Tag Pairing Code</label>
+      <input type="text" id="tagCode" placeholder="Enter tag code" required>
+
       <label>Pet Profile Picture</label>
       <input type="file" id="petPhoto" accept="image/*" required>
       
@@ -183,8 +186,9 @@ textarea {
 
       <button type="submit" class="btn">Submit</button>
     </form>
-    <h1></h1>
-    <h8>The registration system requires a customer support agent to contact you to check the information submitted is correct, and the tag code is active and not already registered.</h8>
+    <p style="font-size:12px; color:#6b7280; margin-top:20px;">
+      The registration system requires a customer support agent to contact you to check the information submitted is correct, and the tag code is active and not already registered.
+    </p>
     <hr><hr><hr><hr><hr>
   </div>
       
@@ -196,7 +200,7 @@ textarea {
 </div>
 
 <script>
-const IMGBB_KEY = "8766a6074de7b755de5b070571fe5ccf"; // Replace with your key
+const IMGBB_KEY = "8766a6074de7b755de5b070571fe5ccf"; 
 const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1429190214898942113/-FEfY4XNK55DC2LoFn3LTU68CSoBQBNZC3-EorCeFW02QfAkd6hTAd7IQhfQBPgV3oFF";
 
 async function uploadToImgBB(file) {
@@ -219,6 +223,7 @@ async function sendToDiscord(fields, imageUrl) {
       title: "🐶 New Tag Setup Submission",
       color: 5793266,
       fields: [
+        { name: "Tag Pairing Code", value: fields.tagCode || "N/A", inline: true },
         { name: "Pet Name", value: fields.petName || "N/A", inline: true },
         { name: "Gender", value: fields.petGender || "N/A", inline: true },
         { name: "Breed", value: fields.petBreed || "N/A", inline: true },
@@ -245,6 +250,7 @@ document.getElementById("tagForm").addEventListener("submit", async e => {
   e.preventDefault();
   const file = document.getElementById("petPhoto").files[0];
   const fields = {
+    tagCode: document.getElementById("tagCode").value.trim(),
     petName: document.getElementById("petName").value.trim(),
     petGender: document.getElementById("petGender").value.trim(),
     petMedical: document.getElementById("petMedical").value.trim(),
