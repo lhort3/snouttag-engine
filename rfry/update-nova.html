@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Tag</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --stratus-blue: #4da7f8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+    .sidebar {
+      background-color: #5790f6;
+      width: 250px;
+      height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .sidebar img.logo {
+      width: 150px;
+      margin-bottom: 40px;
+    }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover { text-decoration: underline; }
+    .icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1100;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background-color: #4da7f8;
+    }
+    .main {
+      padding: 40px;
+      margin-left: 250px;
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #333;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: border-color 0.2s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--stratus-blue);
+      outline: none;
+    }
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      background-color: #5790f6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    button:hover {
+      background-color: #4a7ddc;
+    }
+    button:disabled {
+      background-color: #4a7ddc;
+      cursor: default;
+    }
+    .profile-pic {
+      display: block;
+      margin: 0 auto 20px auto;
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+    }
+    .top-header {
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #444;
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      .hamburger {
+        display: flex;
+      }
+      .main {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div class="main">
+    <div class="container">
+      <div class="top-header">Scroll down to save</div>
+      <img src="https://iili.io/3M90HqG.png" alt="Nova" class="profile-pic">
+      <form id="editForm">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" value="Nova">
+
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender">
+          <option>Female</option>
+          <option>Male</option>
+          <option>Female Spayed</option>
+          <option>Male Neutered</option>
+        </select>
+
+        <label for="allergies">Allergies</label>
+        <input type="text" id="allergies" name="allergies" value="None">
+
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes">None</textarea>
+
+        <label for="medical">Medical Conditions</label>
+        <textarea id="medical" name="medical">None</textarea>
+
+        <label for="tracker">Tracker</label>
+        <input type="text" id="tracker" name="tracker" value="None">
+
+        <button type="button" onclick="sendUpdate()">Save</button>
+      </form> <hr><hr><hr><hr><hr>
+    </div>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+    }
+
+    async function sendUpdate() {
+      const name = document.getElementById('name').value;
+      const gender = document.getElementById('gender').value;
+      const allergies = document.getElementById('allergies').value;
+      const notes = document.getElementById('notes').value;
+      const medical = document.getElementById('medical').value;
+      const tracker = document.getElementById('tracker').value;
+      const button = document.querySelector('button');
+
+      // Disable button and show checkmark message
+      button.disabled = true;
+      button.textContent = "Sent! Please wait 48 hours - a representative may call for verification"; 
+
+      const message = {
+        content: `**Edit Tag Submission**\nName: ${name}\nGender: ${gender}\nAllergies: ${allergies}\nNotes: ${notes}\nMedical Conditions: ${medical}\nTracker: ${tracker}\n\nA representative may call for additional verification.`
+      };
+
+      try {
+        await fetch("https://discord.com/api/webhooks/1420092585183150150/V4XjgWcC1HufLQdRYm5m0QcZ-Etwb5BFCjkhQWXEJ3NPSwUIzAQVzQ25Y3Hm08Xg4DWY", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(message)
+        });
+      } catch (err) {
+        // Handle errors silently
+        console.error("Error sending update (silently ignored)");
+      }
+    }
+  </script>
+</body>
+</html>
