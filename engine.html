@@ -118,7 +118,7 @@ iframe { width:100%; height:100%; border:none; display:block; }
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
-const SERVER_URL = "https://app.snoutpet.co.uk/accounts.json";
+const SERVER_URL = "https://snouttag-auth.onrender.com"; // Render backend
 
 const screens = {
   welcome: document.getElementById("screenWelcome"),
@@ -169,23 +169,35 @@ function loadPage(key){
   els.mainFrame.src = pages[key].replace(/USERCODE/g, encodeURIComponent(code));
 }
 
-async function fetchAccounts(){
-  const res = await fetch(SERVER_URL, {cache:"no-store"});
-  if(!res.ok) throw new Error("Network error: "+res.status);
-  return await res.json();
-}
+// Secure login via backend
+async function attemptLogin(u, p) {
+  els.loginMsg.textContent = "Contacting server...";
+  if (!u || !p) { 
+    els.loginMsg.textContent = "Enter username & password."; 
+    return; 
+  }
 
-async function attemptLogin(u,p){
-  els.loginMsg.textContent="Contacting server...";
-  let users;
-  try{ users = await fetchAccounts(); }
-  catch(e){ els.loginMsg.textContent="Unable to reach the server."; return; }
-  const found = users.find(x=>x.username===u && x.password===p);
-  if(!found){ els.loginMsg.textContent="Invalid username or password."; return; }
-  setCookie("snout_username", u);
-  setCookie("snout_password", p);
-  setCookie("snout_usercode", found.usercode);
-  startApp(found.usercode);
+  try {
+    const res = await fetch(SERVER_URL + "/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: u, password: p }),
+    });
+
+    const data = await res.json();
+    if (!data.success) {
+      els.loginMsg.textContent = "Invalid username or password.";
+      return;
+    }
+
+    setCookie("snout_usercode", data.usercode);
+    eraseCookie("snout_username");
+    eraseCookie("snout_password");
+
+    startApp(data.usercode);
+  } catch (e) {
+    els.loginMsg.textContent = "Unable to reach the server.";
+  }
 }
 
 function startApp(code){
@@ -203,8 +215,8 @@ function startApp(code){
 }
 
 function autoLogin(){
-  const u=getCookie("snout_username"), p=getCookie("snout_password");
-  if(u && p){ attemptLogin(u,p); }
+  const code=getCookie("snout_usercode");
+  if(code){ startApp(code); }
 }
 
 els.btnStart.onclick = ()=>showScreen("screenLoginChoice");
