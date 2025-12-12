@@ -172,13 +172,17 @@ async function attemptLogin(u,p){
   if(!u || !p){ els.loginMsg.textContent = "Enter username & password."; return; }
 
   try{
-    const res = await fetch(`${SERVER_URL}/login`, {
+    const res = await fetch("https://snouttag-auth.onrender.com/login", { // <- backend URL
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: u, password: p })
     });
     const data = await res.json();
-    if(!data.success){ els.loginMsg.textContent = "Invalid username or password."; return; }
+
+    if(!data.success){ 
+      els.loginMsg.textContent = "Invalid username or password."; 
+      return; 
+    }
 
     setCookie("snout_usercode", data.usercode);
     startApp(data.usercode);
@@ -186,6 +190,7 @@ async function attemptLogin(u,p){
     els.loginMsg.textContent = "Unable to reach the server.";
   }
 }
+
 
 // Start app
 function startApp(code){
