@@ -4,12 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SnoutTag</title>
-
-<!-- PWA Manifest & Theme -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#578ff6">
 <link rel="apple-touch-icon" href="https://app.snoutpet.co.uk/assets/pwaicon.png">
-
 <style>
 :root {
   --stratus-blue: #578ff6;
@@ -110,7 +107,7 @@ iframe { width:100%; height:100%; border:none; display:block; }
 <div id="bottomNav" class="bottom-nav" style="display:none;">
   <button class="nav-btn" data-target="home"><img src="https://img.icons8.com/ios-filled/50/ffffff/home.png"/></button>
   <button class="nav-btn" data-target="tags"><img src="https://img.icons8.com/ios-filled/50/ffffff/tag-window.png"/></button>
-  <button class="nav-btn" data-target="setup"><img src="https://img.icons8.com/ios-filled/100/ffffff/plus.png"/></button>
+  <button class="nav-btn" data-target="setup"><img src="https://app.snoutpet.co.uk/tag-setup.png"/></button>
   <button class="nav-btn" data-target="profile"><img src="https://img.icons8.com/ios-filled/50/ffffff/user.png"/></button>
   <button class="nav-btn" data-target="menu"><img src="https://img.icons8.com/ios-filled/50/ffffff/menu.png"/></button>
 </div>
@@ -169,37 +166,28 @@ function loadPage(key){
   els.mainFrame.src = pages[key].replace(/USERCODE/g, encodeURIComponent(code));
 }
 
-// Secure login via backend
-async function attemptLogin(u, p) {
+// Login function
+async function attemptLogin(u,p){
   els.loginMsg.textContent = "Contacting server...";
-  if (!u || !p) { 
-    els.loginMsg.textContent = "Enter username & password."; 
-    return; 
-  }
+  if(!u || !p){ els.loginMsg.textContent = "Enter username & password."; return; }
 
-  try {
-    const res = await fetch(SERVER_URL + "/login", {
+  try{
+    const res = await fetch(`${SERVER_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: u, password: p }),
+      body: JSON.stringify({ username: u, password: p })
     });
-
     const data = await res.json();
-    if (!data.success) {
-      els.loginMsg.textContent = "Invalid username or password.";
-      return;
-    }
+    if(!data.success){ els.loginMsg.textContent = "Invalid username or password."; return; }
 
     setCookie("snout_usercode", data.usercode);
-    eraseCookie("snout_username");
-    eraseCookie("snout_password");
-
     startApp(data.usercode);
-  } catch (e) {
+  }catch(err){
     els.loginMsg.textContent = "Unable to reach the server.";
   }
 }
 
+// Start app
 function startApp(code){
   showScreen("screenMain");
   els.bottomNav.style.display="flex";
@@ -214,6 +202,7 @@ function startApp(code){
   loadPage("home");
 }
 
+// Auto-login if usercode cookie exists
 function autoLogin(){
   const code=getCookie("snout_usercode");
   if(code){ startApp(code); }
