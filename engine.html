@@ -168,7 +168,7 @@ function loadPage(key){
 
 // Login function
 async function attemptLogin(u,p){
-  els.loginMsg.textContent = "Contacting server...";
+  els.loginMsg.textContent = "Contacting server, this may take a few minutes.";
   if(!u || !p){ els.loginMsg.textContent = "Enter username & password."; return; }
 
   try{
